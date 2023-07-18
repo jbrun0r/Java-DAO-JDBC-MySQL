@@ -47,15 +47,21 @@ The project is organized into packages, with the following structure:
 
 ## Class Diagram
 
-<img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/class-diagram.png?raw=true" width="100%">
+<!-- <img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/class-diagram.png?raw=true" width="100%"> -->
+
+![](https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/class-diagram.png?raw=true)
 
 ## Overview of the DAO Pattern
 
-<img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/data-access-object.png?raw=true" width="100%">
+<!-- <img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/data-access-object.png?raw=true" width="100%"> -->
+
+![](https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/data-access-object.png?raw=true)
 
 ## Overview of JDBC
 
-<img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/java-database-connectivity.png?raw=true" width="300px">
+<!-- <img src="https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/java-database-connectivity.png?raw=true" width="300px"> -->
+
+![](https://github.com/jbrun0r/assets/blob/main/Java-DAO-JDBC/java-database-connectivity.png?raw=true)
 
 ## References
 
