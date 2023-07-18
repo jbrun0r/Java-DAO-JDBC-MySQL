@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,41 @@ public class SellerDaoJDBC implements SellerDao{
 
 	@Override
 	public void insert(Seller seller) {
-		// TODO Auto-generated method stub
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(
+					"INSERT INTO seller  "
+					+ "(Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+ "VALUES (?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			
+			statement.setString(1, seller.getName());
+			statement.setString(2, seller.getEmail());
+			statement.setDate(3, new java.sql.Date(seller.getBirthDate().getTime()));
+			statement.setDouble(4, seller.getBaseSalary());
+			statement.setInt(5, seller.getDepartment().getId());
+			
+			int rowsAffedcted = statement.executeUpdate();
+			
+			if(rowsAffedcted>0) {
+				ResultSet result = statement.getGeneratedKeys();
+				if(result.next()) {
+					int id = result.getInt(1);
+					seller.setId(id);
+				}
+				DB.closeResultSet(result);
+			}
+			else {
+				throw new DbException("No rows affected!");
+			}
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(statement);
+		}
 		
 	}
 
@@ -79,21 +114,30 @@ public class SellerDaoJDBC implements SellerDao{
 		PreparedStatement statement = null;
 		ResultSet result = null;
 		
-		String baseQuery = "SELECT seller.*, department.Name AS DepName "
-				+ "FROM seller INNER JOIN department "
-				+ "ON seller.DepartmentId = department.Id";
-		
 		try {
-			statement = connection.prepareStatement(baseQuery);
+			statement = connection.prepareStatement(
+					"SELECT seller.*, department.Name as DepName "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.DepartmentId = department.Id "
+					+ "ORDER BY Name");
+			
 			result = statement.executeQuery();
 			
 			List<Seller> sellers = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+			
 			while (result.next()) {
-				Department department = instantiateDepartment(result);
-				Seller seller = instantiateSeller(result, department);
+				
+				Department dep = map.get(result.getInt("DepartmentId"));
+				
+				if(dep == null) {
+					dep = instantiateDepartment(result);
+					map.put(result.getInt("DepartmentId"), dep);
+				}
+				
+				Seller seller = instantiateSeller(result, dep);
 				sellers.add(seller);
 			}
-			
 			return sellers;
 		}
 		catch(SQLException e) {
